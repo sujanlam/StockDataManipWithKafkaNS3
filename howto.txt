@@ -1,0 +1,58 @@
+1) Create AWS account
+2) Create IAM user
+3) Create a bucket in S3 (also IAM role for Glue to access and store data in S3)
+4) Create an EC2 instance in EC2
+
+5) Go to instance and click connect
+6) Use that ssh command to connect to EC2
+7) Then download kafka in the EC2 instance
+=> wget https://downloads.apache.org/kafka/*.*.*/kafka_*.**-*.*.*.tgz
+8) Uncompress the tgz file
+=> tar -xvf kafka_*.**-*.*.*.tgz
+
+9) Check if java is installed (Kafka runs of Java). For sure it will not be.
+=> java -version
+10) Install java jdk
+=> sudo yum install java-******-OpenJDK
+11) Check java version
+=> java -version
+
+12) Go to Kafka folder
+=> cd kafka_*.**-*.*.*
+
+13) Start Zoo-keeper [New terminal] (Use ssh command to connect to EC2):
+-------------------------------
+=> bin/zookeeper-server-start.sh config/zookeeper.properties
+
+14) Assign memory for Kafka:[New terminal] (Use ssh command to connect to EC2):
+=> export KAFKA_HEAP_OPTS="-Xmx256M -Xms128M"
+
+15) Change server.properties file with public IP with public IP from EC2 instance.
+=> Uncomemnt and change ADVERTISED_LISTENERS
+=> sudo nano config/server.properties
+
+16) Start Kafka Server [New terminal] (Use ssh command to connect to EC2):
+----------------------------------------
+=> cd kafka_*.**-*.*.*
+=> bin/kafka-server-start.sh config/server.properties
+
+
+17) Create the topic (Use ssh command to connect to EC2):
+----------------------------------------------------------
+=> cd kafka_*.**-*.*.*
+=> bin/kafka-topics.sh --create --topic sampletopic --bootstrap-server *************:9092 --replication-factor 1 --partitions 1
+
+18) Start Producer (Use ssh command to connect to EC2)::
+--------------------------
+=> cd kafka_*.**-*.*.*
+=> bin/kafka-console-producer.sh --topic sampletopic --bootstrap-server *************:9092 
+
+19) Start Consumer (Use ssh command to connect to EC2)::
+-------------------------
+=> cd kafka_*.**-*.*.*
+=> bin/kafka-console-consumer.sh --topic sampletopic --bootstrap-server *************:9092
+
+20) Write Producer and Consumer code 
+21) Connect to the S3 bucket
+22) Create crawler in Glue with a IAM role that lets you perform query on data using Amazon ATHENA.
+
